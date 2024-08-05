@@ -1,0 +1,252 @@
+
+\documentclass[envcountsect]{beamer}
+
+% For notes (show notes + forma)
+\setbeameroption{show notes on second screen=right} % Both
+% Coloring note-pages
+\setbeamertemplate{note page}{\pagecolor{white}\insertnote}
+% Note-pages title
+\AtBeginNote{\vspace{0.325cm}{\usebeamerfont{frametitle}\usebeamercolor[fg]{black}\insertframetitle} \par}
+
+
+% Theme slides
+\usetheme[
+  ]{Feather}
+\definecolor{awesome}{rgb}{1.0, 0.13, 0.32}
+\definecolor{byzantine}{rgb}{0.74, 0.2, 0.64}
+\definecolor{cadmiumgreen}{rgb}{0.0, 0.42, 0.24}
+\definecolor{darkchampagne}{rgb}{0.76, 0.7, 0.5}
+\definecolor{darkbyzantium}{rgb}{0.36, 0.22, 0.33}
+\setbeamercolor{Feather}{fg=darkchampagne,bg=darkbyzantium}
+
+\setbeamercolor{structure}{fg=darkbyzantium}
+\setbeamercolor{frametitle}{fg=black!5}
+\setbeamercolor{normal text}{fg=black!75,bg=white}
+\setbeamercolor{block title}{use=Feather,bg=Feather.fg, fg=black!90} 
+
+
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{ragged2e} % justify
+
+
+\usepackage{smartdiagram}
+\usepackage{tipa} %API
+
+%% Graphs
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+
+%% Frame
+ \usepackage{fancybox}
+
+%% Biblio
+\usepackage[sort,comma,authoryear]{natbib}
+
+%% emoji
+\usepackage{emoji}
+
+%% Table
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\setlength{\columnsep}{-20pt}
+
+
+% colored hyperlinks
+\newcommand{\chref}[2]{
+  \href{#1}{{\usebeamercolor[bg]{Feather}#2}}
+}
+
+% color alert
+\setbeamercolor{alerted text}{fg=awesome}
+
+%% colored reference
+\definecolor{darkchampagne}{rgb}{0.76, 0.7, 0.5}
+\let\oldcitet=\citet
+\let\oldcite=\cite
+\let\oldcitep=\citep 
+\renewcommand{\citet}[1]{\textcolor[rgb]{0.76, 0.7, 0.5}{\oldcitet{#1}}}
+\renewcommand{\citep}[1]{\textcolor[rgb]{0.76, 0.7, 0.5}{\oldcitep{#1}}}
+\renewcommand{\cite}[1]{\textcolor[rgb]{0.76, 0.7, 0.5}{\oldcite{#1}}}
+
+\setbeamersize{text margin left = 16pt, text margin right = 16pt}
+
+\title[Régression linéaire et modèles mixtes II] 
+{
+	\textbf{Régression linéaire et modèles mixtes II}
+}
+
+
+\author[Céline Pozniak]
+{    Céline Pozniak}
+
+\institute[STAL2- Statistiques appliquées en Acquisition de L2]
+{STAL2- Statistiques appliquées en Acquisition de L2}
+	
+
+
+\date{29 août 2024}
+
+ \begin{document}
+		
+	{%\1% % this is the name of the PDF file for the background
+		\begin{frame}[plain,noframenumbering] % the plain option removes the header from the title page, noframenumbering removes the numbering of this frame only
+ \vspace{30pt} \includegraphics[width=2cm]{Images/sfllogo.png}\includegraphics[width=1.5cm]{Images/logop8.png} \vspace{-50pt}
+			\titlepage % call the title page information from above
+	\end{frame}}
+
+
+
+\begin{frame}{Programme pour cette session}
+	\tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+\section{Rappel}
+
+\begin{frame}{Progression}
+	\tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+\begin{frame}{Régression linéaire}
+\begin{multicols}{2}
+\includegraphics[scale=.15, frame]{Images/regressionsansdroite.png} \pause
+\includegraphics[scale=.15, frame]{Images/regression.png} \pause
+\end{multicols}
+\justifying
+\begin{itemize}
+    \item \textbf{But :} Prédire le comportement d'une VD (\textit{y}) en fonction du comportement d'une VI (\textit{x}) \pause
+    \item \textbf{Postulat :} VD et VI \textit{continues}, et liées par une relation \textit{linéaire}  \pause:
+    \vspace{-5pt}
+    \begin{itemize}
+        \item[] \hspace{80pt} \ensuremath{\hat{y}_{i}=\textcolor{byzantine}{\beta_{0}}+\textcolor{blue}{\beta_{1}x_{i}}} \pause
+        \item[ET] \hspace{80pt} \ensuremath{y_{i}=\hat{y}_{i}+\textcolor{cadmiumgreen}{e_{i}}}
+    \end{itemize}
+\end{itemize}
+
+\note{ prédire = modéliser}
+\end{frame}
+
+
+\begin{frame}{Principe de la régression linéaire}
+\begin{center}
+ \includegraphics[scale=.15, frame]{Images/regression.png}  
+\end{center}
+\justifying
+
+    \begin{itemize}
+    \item \textbf{Principe :}  \ensuremath{\hat{y}_{i}=\textcolor{byzantine}{\beta_{0}}+\textcolor{blue}{\beta_{1}x_{i}}} et \ensuremath{y_{i}=\hat{y}_{i}+\textcolor{cadmiumgreen}{e_{i}}}
+    \item Avec : 
+    \begin{itemize}
+        \item \ensuremath{\hat{y}_{i}} = valeur prédite de \ensuremath{y_{i}} (VD) 
+        \item \ensuremath{x_{i}} = valeur de la VI 
+        \item \ensuremath{\textcolor{byzantine}{\beta_{0}}} = \textcolor{byzantine}{\textbf{intercept}} : valeur de \ensuremath{\hat{y}_{i}} quand \ensuremath{x=0} 
+        \item \ensuremath{\textcolor{blue}{\beta_{1}x_{i}}} = \textcolor{blue}{\textbf{pente}} : différence de \ensuremath{\hat{y}_{i}} associée à l'augmentation de \ensuremath{x} 
+        \item \ensuremath{\textcolor{cadmiumgreen}{e_{i}}} = \textcolor{cadmiumgreen}{\textbf{résidu}} : erreur de prédiction
+    \end{itemize}
+\end{itemize}
+
+\note{
+\begin{itemize}
+    \item \textbf{Principe :} Calcul de la droite qui minimise les résidus \pause
+    \item \textbf{Méthode :} Méthode \og des moindres carrés \fg{} \pause
+    \item[] \ensuremath{min(\sum(y-\hat{y})^{2})} \pause
+    \item Calcul par : \pause
+    \begin{itemize}
+        \item \ensuremath{\beta_{1}=\frac{\textrm{cov}_{xy}}{s^{2}_{x}}=r.(s_{y}/s_{x})} \pause
+        \item[et] \ensuremath{\beta_{0}=\overline{y}-\beta_{1}.\overline{x}} \pause
+        \item[avec] $r$ le coefficient de corrélation (Pearson) entre $x$ et $y$ 
+    \end{itemize}
+\end{itemize}
+
+}
+\end{frame}
+
+
+\begin{frame}{Dans R}
+<<boring-random, tidy=FALSE>>=
+```{r}
+data <- read.csv("simul_freqRT_all.csv", sep="\t")
+head(data)
+
+```
+@
+
+\end{frame}
+
+\begin{frame}{Principes de la régression linéaire}
+    \begin{itemize}
+    \item Variables \alert{continues} 
+    \item \alert{Linéarité} des variables \pause
+    \item Homoscédasticité des résidus : \alert{constance} des variances \pause
+    \item[] \includegraphics[height=60pt, frame]{Images/homosced.png} vs. \includegraphics[height=60pt, frame]{Images/nohomosced.png} \pause
+    \item \alert{Normalité} des résidus :
+    \begin{itemize}
+        \item[] \ensuremath{e_{i} \sim N(0,\sigma)}
+    \end{itemize}
+\end{itemize}
+
+\note{
+\begin{itemize}
+    \item Variables continues
+   \begin{itemize}
+        \item Peuvent conceptuellement aller de $-\infty$ à $+\infty$ \pause
+        \item Mais VI peut en fait être discrète, voire qualitative \pause
+    \end{itemize}
+    
+\end{itemize}
+}
+\end{frame}
+
+
+
+\begin{frame}{Régression linéaire multiple}
+    
+\end{frame}
+
+\begin{frame}{Différentes VD, différents modèles}
+\begin{itemize}
+    \item Les modèles généralisés et cumulatifs - qu'on ne va pas voir ici - sont une extension des modèles de régression linéaire \pause
+    \item Mêmes principes pour la structuration (formule) + intégration des données (notamment codage des VI, non-corrélation) \pause
+    \vspace{10pt}
+    \item Spécifications différentes \pause
+    \vspace{10pt}
+    \item Pour modéliser des mesures répétées (plusieurs observations par variable dans l'échantillonnage) $\rightarrow$ modèles mixtes
+\end{itemize}
+\end{frame}
+
+
+\section{Modèles mixtes}
+
+\begin{frame}{Progression}
+	\tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+\section{Modèles maximaux}
+
+\begin{frame}{Progression}
+	\tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+\section{Problèmes de convergence}
+
+
+
+\begin{frame}{Progression}
+	\tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+
+
+\section{Atelier pratique}
+
+\begin{frame}{Progression}
+	\tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+
+\begin{frame}{BLA}
+    
+\end{frame}
+
+\end{document}
